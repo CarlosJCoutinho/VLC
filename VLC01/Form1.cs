@@ -28,8 +28,7 @@ namespace VLC01
 
         private void frmVLC_Load(object sender, EventArgs e)
         {
-            textBox1.Text = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
-
+            
             //textBox2.Text = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
         }
 
@@ -39,88 +38,7 @@ namespace VLC01
             this.Close();
         }
 
-        // VLC Player 32 bits
-        private void btnStartVLC32Player_Click(object sender, EventArgs e)
-        {
-            vlcControl1.Play(new Uri(textBox1.Text));
-        }
-
-        private void btnPauseVLC32Player_Click(object sender, EventArgs e)
-        {
-            vlcControl1.Pause();
-        }
-
-        private void btnStopVLC32Player_Click(object sender, EventArgs e)
-        {
-            vlcControl1.Stop();
-        }
-
         // VLC Player 64 bits
-        private void btnPauseVLC64Player_Click(object sender, EventArgs e)
-        {
-            axVLCPlugin21.playlist.pause();
-        }
-
-        private void btnStopVLC64Player_Click(object sender, EventArgs e)
-        {
-            axVLCPlugin21.playlist.stop();
-            axVLCPlugin21.playlist.items.clear();
-            txtItemsCount.Text = axVLCPlugin21.playlist.itemCount.ToString();
-            txtVideoFilePlaying.Text = "0";
-        }
-
-        private void btnLoadFile1_Click(object sender, EventArgs e)
-        {
-            textBox2.Text = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
-            axVLCPlugin21.playlist.add(textBox2.Text);
-        }
-
-        private void btnLoadFile2_Click(object sender, EventArgs e)
-        {
-            axVLCPlugin21.playlist.items.clear();
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "( *.mp4) |  *.mp4";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textBox2.Text = openFileDialog1.FileName;
-                var uri = new Uri(@textBox2.Text);
-                var convertedURI = uri.AbsoluteUri;
-                axVLCPlugin21.playlist.add(convertedURI);
-            }
-        }
-
-        private void btnPlayVLC64Player_Click(object sender, EventArgs e)
-        {
-            axVLCPlugin21.playlist.play();
-        }
-
-        private void btnAddFile_Click(object sender, EventArgs e)
-        {
-            
-            openFileDialog1.Filter = "( *.mp4) |  *.mp4";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                listBox1.Items.Add(openFileDialog1.FileName);
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            listBox1.Items.Clear();
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            txtItemsCount.Text = listBox1.Items.Count.ToString();
-            for (int i = 0; i < listBox1.Items.Count; i++)
-            {
-                string s = listBox1.Items[i].ToString();
-                var uri = new Uri(s);
-                var convertedURI = uri.AbsoluteUri;
-                axVLCPlugin21.playlist.add(convertedURI);
-            }
-        }
-
         private void axVLCPlugin21_MediaPlayerPositionChanged(object sender, AxAXVLC.DVLCEvents_MediaPlayerPositionChangedEvent e)
         {
             txtVideoFilePlaying.Text = axVLCPlugin21.playlist.currentItem.ToString();
@@ -564,17 +482,6 @@ namespace VLC01
             btnLimpar2.Enabled = false;
             btnPlayClip.Enabled = false;
             btnStopClip.Enabled = false;
-        }
-
-        private void btnAbrirPlayerVideo_Click(object sender, EventArgs e)
-        {
-            playerVideo.Show();
-            playerVideo.WindowState = FormWindowState.Normal;
-        }
-
-        private void btnFecharPlayerVideo_Click(object sender, EventArgs e)
-        {
-            playerVideo.WindowState = FormWindowState.Minimized;
         }
 
         private void axVLCPlugin21_MediaPlayerEndReached(object sender, EventArgs e)
