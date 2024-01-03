@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xamarin.Forms.Xaml;
+using AxAXVLC;
 
 namespace VLC01
 {
@@ -28,13 +29,13 @@ namespace VLC01
 
         private void frmVLC_Load(object sender, EventArgs e)
         {
-            
+
             //textBox2.Text = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (playerVideo != null) playerVideo.Close();    
+            if (playerVideo != null) playerVideo.Close();
             this.Close();
         }
 
@@ -195,7 +196,7 @@ namespace VLC01
 
             // Atualização do estado dos botões
             btnPausa.Enabled = true;
-            
+
             btnProximo.Enabled = true;
             btnParar.Enabled = true;
             btnIniciar.Enabled = false;
@@ -282,7 +283,7 @@ namespace VLC01
                 playerVideo.Seguinte();
             }
         }
-    
+
         private void btnNovaPlaylist_Click(object sender, EventArgs e)
         {
             //buttonPainelPublicidadeAbrir.Enabled = false;
@@ -335,7 +336,7 @@ namespace VLC01
                 textBox3.Text = "";
 
                 this.axVLCPlugin21.AutoLoop = false;
-               
+
 
                 string s = listBox2.SelectedItem.ToString();
                 var uri = new Uri(s);
@@ -347,7 +348,7 @@ namespace VLC01
 
                 axVLCPlugin21.AutoPlay = false;
                 axVLCPlugin21.playlist.playItem(0);
-                
+
                 // Exibe o vídeo uma só vez
                 //axWindowsMediaPlayer.settings.playCount = 1;
 
@@ -388,7 +389,7 @@ namespace VLC01
                 if (listBox2.Items.Count > 0)
                 {
                     listBox1.BackColor = Color.White;
-                    if(listBox1.Items.Count > 0) btnConfirmar.Enabled = true;
+                    if (listBox1.Items.Count > 0) btnConfirmar.Enabled = true;
                     btnIniciar.Enabled = false;
                     btnPausa.Enabled = false;
                     btnAnterior.Enabled = false;
@@ -499,6 +500,220 @@ namespace VLC01
             else if (axVLCPlugin21.input.state == 5) textBox2.Text = "STOPPING";
             else if (axVLCPlugin21.input.state == 6) textBox2.Text = "ENDED";
             else if (axVLCPlugin21.input.state == 7) textBox2.Text = "ERROR";
+
+            txtVLCIsPlaying.Text = vlcControl1.IsPlaying.ToString();
+
+
+        }
+
+        private void vlcControl1_VlcLibDirectoryNeeded(object sender, Vlc.DotNet.Forms.VlcLibDirectoryNeededEventArgs e)
+        {
+            //e.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files\VideoLAN\VLC\");
+
+            if (IntPtr.Size == 4)
+                e.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files (x86)\VideoLAN\VLC\");
+            else
+                e.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files\VideoLAN\VLC\");
+        }
+
+        private void btnAdicionar3_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = "Abrir ficheiros de video";
+            openFileDialog1.Filter = "Todos os ficheiros de video (*.avi;*.mp4;*.wmv)|*.avi;*.mp4;*.wmv";
+            openFileDialog1.Multiselect = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                foreach (var videoFile in openFileDialog1.FileNames)
+                {
+                    listBox3.Items.Add(videoFile);
+                }
+
+                btnLimpar3.Enabled = true;
+            }
+        }
+
+        private void btnLimpar3_Click(object sender, EventArgs e)
+        {
+            listBox3.Items.Clear();
+
+            btnLimpar3.Enabled = false;
+            btnPlayClip2.Enabled = false;
+            btnStopClip2.Enabled = false;
+        }
+
+        private void btnPlayClip2_Click(object sender, EventArgs e)
+        {
+            if (listBox3.Text != "")
+            {
+                string s = listBox3.SelectedItem.ToString();
+
+                FileInfo fi = new FileInfo(s);
+                this.vlcControl1.SetMedia(fi);
+                this.vlcControl1.Play();
+
+                btnStopClip2.Enabled = true;
+            }
+        }
+
+        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ativar o botão PlayClip
+            btnPlayClip2.Enabled = true;
+        }
+
+        private void btnStopClip2_Click(object sender, EventArgs e)
+        {
+            this.vlcControl1.Stop();
+        }
+
+        private void btnConfirmar2_Click(object sender, EventArgs e)
+        {
+            if (listBox4 != null)
+            {
+                //txtItemsCount.Text = listBox1.Items.Count.ToString();
+
+                //axVLCPlugin21.playlist.items.clear();
+
+                //axVLCPlugin21.AutoPlay = true;
+
+                //for (int i = 0; i < listBox1.Items.Count; i++)
+                //{
+                //    string s = listBox1.Items[i].ToString();
+                //    var uri = new Uri(s);
+                //    var convertedURI = uri.AbsoluteUri;
+                //    axVLCPlugin21.playlist.add(convertedURI);
+                //}
+
+                //playerVideo.AdicionarFicheiroPlaylist(listBox1);
+            }
+
+            // Mudança da cor de fundo da listbox
+            listBox4.BackColor = Color.FromArgb(192, 255, 192);
+
+            listBox4.SelectedIndex = 0;
+
+            // Button status
+            btnConfirmar2.Enabled = false;
+            btnAdicionar4.Enabled = false;
+            btnGravar2.Enabled = false;
+            btnCarregar2.Enabled = false;
+            btnLimpar4.Enabled = false;
+            btnIniciar2.Enabled = true;
+            btnNovaPlaylist.Enabled = true;
+        }
+
+        private void btnAdicionar4_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = "Abrir ficheiros de video";
+            openFileDialog1.Filter = "Todos os ficheiros de video (*.avi;*.mp4;*.wmv)|*.avi;*.mp4;*.wmv";
+            openFileDialog1.Multiselect = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                foreach (var ficheiroVideo in openFileDialog1.FileNames)
+                {
+                    listBox4.Items.Add(ficheiroVideo);
+                }
+            }
+
+            if (listBox4.Items.Count > 0)
+            {
+                // Botões Playlist
+                btnGravar2.Enabled = true;
+                btnLimpar4.Enabled = true;
+                btnConfirmar.Enabled = true;
+
+                // Botões painel gráfico
+                //buttonPainelPublicidadeAbrir.Enabled = true;
+            }
+        }
+
+        private void btnGravar2_Click(object sender, EventArgs e)
+        {
+            if (listBox4.Items.Count > 0)
+            {
+                saveFileDialog1.Title = "Gravar playlist";
+                saveFileDialog1.Filter = "Ficheiro texto|*.txt";
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    StreamWriter file = new StreamWriter(saveFileDialog1.FileName, false);
+                    for (int i = 0; i < listBox4.Items.Count; i++)
+                    {
+                        file.WriteLine(listBox4.Items[i].ToString());
+                    }
+                    file.Close();
+                }
+            }
+        }
+
+        private void btnCarregar2_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = "Abrir o ficheiro da playlist";
+            openFileDialog1.Filter = "Ficheiro texto (*.txt)|*.txt";
+            openFileDialog1.Multiselect = false;
+
+            // colocar os ficheiros na listbox
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                StreamReader ficheiro = new StreamReader(openFileDialog1.FileName);
+                while (ficheiro.Peek() != -1)
+                {
+                    listBox4.Items.Add(ficheiro.ReadLine());
+                }
+                ficheiro.Close();
+            }
+
+            if (listBox4.Items.Count > 0)
+            {
+                // Botões da playlist
+                btnLimpar4.Enabled = true;
+                btnConfirmar2.Enabled = true;
+
+                // Botões do painel gráfico
+                //buttonPainelPublicidadeAbrir.Enabled = true;
+            }
+        }
+
+        private void btnLimpar4_Click(object sender, EventArgs e)
+        {
+            listBox4.Items.Clear();
+
+            // Botões Playlist
+            btnGravar2.Enabled = false;
+            btnLimpar2.Enabled = false;
+            btnConfirmar2.Enabled = false;
+        }
+
+        private void btnNovaPlaylist2_Click(object sender, EventArgs e)
+        {
+            //buttonPainelPublicidadeAbrir.Enabled = false;
+            btnNovaPlaylist2.Enabled = false;
+            btnGravar2.Enabled = false;
+            btnLimpar4.Enabled = false;
+
+            listBox4.Enabled = true;
+            listBox4.Items.Clear();
+
+            btnAdicionar2.Enabled = true;
+            btnCarregar2.Enabled = true;
+            btnIniciar2.Enabled = false;
+
+            // Mudança da cor de fundo da listbox
+            listBox4.BackColor = Color.White;
+
+            //axVLCPlugin21.playlist.items.clear();
+        }
+
+        private void btnIniciar2_Click(object sender, EventArgs e)
+        {
+            txtVLC2.Text = listBox4.SelectedItem.ToString();
+
+            string s = listBox4.SelectedItem.ToString();
+
+            FileInfo fi = new FileInfo(s);
+            this.vlcControl1.SetMedia(fi);
+            this.vlcControl1.Play();
         }
     }
 }
